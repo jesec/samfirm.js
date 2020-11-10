@@ -45,7 +45,7 @@ const main = async (region: string, model: string): Promise<void> => {
   Latest version:
     PDA: ${pda}
     CSC: ${csc}
-    MODEM: ${modem}`);
+    MODEM: ${modem !== "" ? modem : "N/A"}`);
 
   const nonce = {
     encrypted: "",
@@ -101,7 +101,7 @@ const main = async (region: string, model: string): Promise<void> => {
     .post(
       "https://neofussvr.sslcs.cdngc.net/NF_DownloadBinaryInform.do",
       getBinaryInformMsg(
-        `${pda}/${csc}/${modem}/${pda}`,
+        `${pda}/${csc}/${modem !== "" ? modem : pda}/${pda}`,
         region,
         model,
         nonce.decrypted
