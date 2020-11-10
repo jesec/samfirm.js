@@ -16,6 +16,7 @@
     "check-types": "tsc --noEmit",
     "format-source": "prettier -w .",
     "lint": "eslint --max-warnings 0 --ext .ts .",
+    "prepack": "rm -rf dist && npm run build",
     "start": "ts-node-dev --transpile-only index.ts"
   },
   "devDependencies": {
