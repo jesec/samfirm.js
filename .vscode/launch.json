@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch",
+      "type": "node",
+      "request": "launch",
+      "skipFiles": ["<node_internals>/**"],
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/ts-node-dev",
+      "runtimeArgs": ["--inspect", "--transpile-only"],
+      "program": "index.ts",
+      "args": ["--region", "DBT", "--model", "SM-F916B"]
+    }
+  ]
+}
