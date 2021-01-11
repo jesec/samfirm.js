@@ -167,13 +167,13 @@ const main = async (region: string, model: string): Promise<void> => {
   );
 
   await axios
-    .get("http://cloud-neofussvr.sslcs.cdngc.net/NF_DownloadBinaryForMass.do", {
-      headers,
-      params: {
-        file: `${binaryModelPath}${binaryFilename}`,
-      },
-      responseType: "stream",
-    })
+    .get(
+      `http://cloud-neofussvr.sslcs.cdngc.net/NF_DownloadBinaryForMass.do?file=${binaryModelPath}${binaryFilename}`,
+      {
+        headers,
+        responseType: "stream",
+      }
+    )
     .then((res: AxiosResponse) => {
       const outputFolder = `${process.cwd()}/${model}_${region}/`;
       console.log();
