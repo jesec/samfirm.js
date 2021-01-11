@@ -1,9 +1,21 @@
 {
   "name": "samfirm",
   "version": "0.1.0",
-  "description": "",
+  "description": "A streaming downloader, decryptor and extractor of Samsung firmware",
+  "keywords": [
+    "samsung",
+    "firmware",
+    "samfirm"
+  ],
   "author": "Jesse Chan",
   "license": "GPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jesec/samfirm.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jesec/samfirm.js/issues"
+  },
   "files": [
     "dist"
   ],
