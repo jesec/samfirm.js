@@ -166,48 +166,68 @@ const main = async (region: string, model: string): Promise<void> => {
     null
   );
 
-  await axios
-    .get(
-      `http://cloud-neofussvr.sslcs.cdngc.net/NF_DownloadBinaryForMass.do?file=${binaryModelPath}${binaryFilename}`,
-      {
-        headers,
-        responseType: "stream",
-      }
-    )
-    .then((res: AxiosResponse) => {
-      const outputFolder = `${process.cwd()}/${model}_${region}/`;
-      console.log();
-      console.log(outputFolder);
-      fs.mkdirSync(outputFolder, { recursive: true });
+  const outputFolder = path.join(process.cwd(), `${model}_${region}`);
+  const outputFile = path.join(outputFolder, binaryFilename);
 
-      let downloadedSize = 0;
-      let currentFile = "";
-      const progressBar = new cliProgress.SingleBar({
-        format: "{bar} {percentage}% | {value}/{total} | {file}",
-        barCompleteChar: "\u2588",
-        barIncompleteChar: "\u2591",
+  const fileSize = fs.existsSync(outputFile) ? fs.statSync(outputFile).size : 0
+
+  const decryptFn = () => {
+    console.log()
+    console.log(`Decrypting \`${binaryFilename}'...`)
+    fs.createReadStream(outputFile)
+      .pipe(binaryDecipher)
+      .pipe(unzip.Parse())
+      .on("entry", (entry) => {
+        entry
+          .pipe(fs.createWriteStream(path.join(outputFolder, entry.path)))
+      })
+      .on("finish", () => {
+        console.log("OK");
       });
-      progressBar.start(binaryByteSize, downloadedSize);
+  }
 
-      return res.data
-        .on("data", (buffer: Buffer) => {
-          downloadedSize += buffer.length;
-          progressBar.update(downloadedSize, { file: currentFile });
-        })
-        .pipe(binaryDecipher)
-        .pipe(unzip.Parse())
-        .on("entry", (entry) => {
-          currentFile = `${entry.path.slice(0, 18)}...`;
-          progressBar.update(downloadedSize, { file: currentFile });
-          entry
-            .pipe(fs.createWriteStream(path.join(outputFolder, entry.path)))
-            .on("finish", () => {
-              if (downloadedSize === binaryByteSize) {
-                process.exit();
-              }
-            });
+  if (fileSize == binaryByteSize) {
+    console.log(`Firmware \`${binaryFilename}' already exists, skip downloading...`)
+    decryptFn()
+  }
+  else {
+    await axios
+      .get(
+        `http://cloud-neofussvr.sslcs.cdngc.net/NF_DownloadBinaryForMass.do?file=${binaryModelPath}${binaryFilename}`,
+        {
+          headers: {
+            ...headers,
+            Range: `bytes=${fileSize}-`
+          },
+          responseType: "stream",
+        }
+      )
+      .then((res: AxiosResponse) => {
+        console.log();
+        console.log(outputFolder);
+        fs.mkdirSync(outputFolder, { recursive: true });
+
+        let downloadedSize = fileSize;
+        let currentFile = binaryFilename;
+        const progressBar = new cliProgress.SingleBar({
+          format: "{bar} {percentage}% | {value}/{total} | {file}",
+          barCompleteChar: "\u2588",
+          barIncompleteChar: "\u2591",
         });
-    });
+        progressBar.start(binaryByteSize, downloadedSize);
+
+        return res.data
+          .on("data", (buffer: Buffer) => {
+            downloadedSize += buffer.length;
+            progressBar.update(downloadedSize, { file: currentFile });
+          })
+          .on("end", () => {
+            progressBar.stop()
+            decryptFn()
+          })
+          .pipe(fs.createWriteStream(path.join(outputFile), { flags: "a" }))
+      });
+  }
 };
 
 const { argv } = yargs
