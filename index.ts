@@ -168,7 +168,7 @@ const main = async (region: string, model: string): Promise<void> => {
 
   await axios
     .get(
-      `http://cloud-neofussvr.sslcs.cdngc.net/NF_DownloadBinaryForMass.do?file=${binaryModelPath}${binaryFilename}`,
+      `http://cloud-neofussvr.samsungmobile.com/NF_DownloadBinaryForMass.do?file=${binaryModelPath}${binaryFilename}`,
       {
         headers,
         responseType: "stream",
