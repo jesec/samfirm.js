@@ -20,6 +20,7 @@ export const getBinaryInformMsg = (
   version: string,
   region: string,
   model: string,
+  imei: string,
   nonce: string
 ): string => {
   const msg: FUSMsg = {
@@ -37,6 +38,12 @@ export const getBinaryInformMsg = (
           },
           CLIENT_PRODUCT: {
             Data: "Smart Switch",
+          },
+          CLIENT_VERSION: {
+            Data: "4.3.23123_1",
+          },
+          DEVICE_IMEI_PUSH: {
+            Data: imei,
           },
           DEVICE_FW_VERSION: {
             Data: version,

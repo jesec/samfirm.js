@@ -17,6 +17,12 @@ export interface FUSMsg {
         CLIENT_PRODUCT?: {
           Data: string;
         };
+        CLIENT_VERSION?: {
+          Data: string;
+        };
+        DEVICE_IMEI_PUSH?: {
+          Data: string;
+        };
         DEVICE_FW_VERSION?: {
           Data: string;
         };

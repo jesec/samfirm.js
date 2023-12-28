@@ -1,7 +1,7 @@
 import crypto from "crypto";
 
-const NONCE_KEY = "hqzdurufm2c8mf6bsjezu1qgveouv7c7";
-const AUTH_KEY = "w13r4cvf4hctaujv";
+const NONCE_KEY = "vicopx7dqu06emacgpnpy8j8zwhduwlh";
+const AUTH_KEY = "9u7qab84rpc16gvk";
 
 export const decryptNonce = (nonceEncrypted: string): string => {
   const nonceDecipher = crypto.createDecipheriv(

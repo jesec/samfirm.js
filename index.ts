@@ -34,10 +34,11 @@ const getLatestVersion = async (
     });
 };
 
-const main = async (region: string, model: string): Promise<void> => {
+const main = async (region: string, model: string, imei: string): Promise<void> => {
   console.log(`
   Model: ${model}
-  Region: ${region}`);
+  Region: ${region}
+  Imei: ${imei}`);
 
   const { pda, csc, modem } = await getLatestVersion(region, model);
 
@@ -104,6 +105,7 @@ const main = async (region: string, model: string): Promise<void> => {
         `${pda}/${csc}/${modem !== "" ? modem : pda}/${pda}`,
         region,
         model,
+        imei,
         nonce.decrypted
       ),
       {
@@ -168,7 +170,7 @@ const main = async (region: string, model: string): Promise<void> => {
 
   await axios
     .get(
-      `http://cloud-neofussvr.sslcs.cdngc.net/NF_DownloadBinaryForMass.do?file=${binaryModelPath}${binaryFilename}`,
+      `http://cloud-neofussvr.samsungmobile.com/NF_DownloadBinaryForMass.do?file=${binaryModelPath}${binaryFilename}`,
       {
         headers,
         responseType: "stream",
@@ -223,10 +225,16 @@ const { argv } = yargs
     type: "string",
     demandOption: true,
   })
+  .option("imei", {
+    alias: "i",
+    describe: "IMEI/Serial Number",
+    type: "string",
+    demandOption: true,
+  })
   .version(packageVersion)
   .alias("v", "version")
   .help();
 
-main(argv.region, argv.model);
+main(argv.region, argv.model, argv.imei);
 
 export {};
