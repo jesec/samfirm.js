@@ -25,7 +25,7 @@ Or build from source.
 ## Example
 
 ```
-> samfirm -m SM-F916N -r KOO
+> samfirm -m SM-F916N -r KOO -i 358003945026815
 
   Model: SM-F916N
   Region: KOO
